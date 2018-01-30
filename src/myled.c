@@ -173,7 +173,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	
 	//処理
 	printk( KERN_INFO "myled: myled_write is called.\n" );
-	printk( KERN_INFO "number: %s %d.\n" k_buf, count);
+	printk( KERN_INFO "number: %s %d.\n",k_buf ,count);
 
 	// 緑点灯
 	if( strncmp(k_buf, "HG", count) ){
