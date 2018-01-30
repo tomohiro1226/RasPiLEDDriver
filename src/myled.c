@@ -170,6 +170,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	if( copy_from_user(k_buf, buf, count) != 0 ){
 		return 0;
 	}
+	k_buf[count] = '\0';
 	
 	//処理
 	printk( KERN_INFO "myled: myled_write is called.\n" );
@@ -177,6 +178,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 
 	// 緑点灯
 	if( strncmp(k_buf, "HG", count) ){
+		printk( KERN_INFO "HG.\n");
 		gpioSet(GPIO4);
 	}
 	// 黄色点灯
