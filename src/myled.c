@@ -167,7 +167,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	
 	char k_buf[256];
 
-	if( !copy_from_user(k_buf, buf, count) ){
+	if( copy_from_user(k_buf, buf, count) != 0 ){
 		return 0;
 	}
 	
