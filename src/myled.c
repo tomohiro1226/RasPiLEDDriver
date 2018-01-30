@@ -183,10 +183,12 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	}
 	// 黄色点灯
 	if( !strncmp(k_buf, "HY", count) ){
+		printk( KERN_INFO "HY.\n");
 		gpioSet(GPIO3);	
 	}
 	// 赤色点灯
 	if( !strncmp(k_buf, "HR", count) ){
+		printk( KERN_INFO "HR.\n");
 		gpioSet(GPIO2);	
 	}
 	// 緑色消灯
