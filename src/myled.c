@@ -19,6 +19,8 @@
 #include <linux/kernel.h>
 #include <linux/io.h>
 
+#include <kernel/kmalloc.h>
+
 #define BASEADD 0x3F200000 // rpi2/3
 // #define BASEADD 0x2000000 // rpi1
 
@@ -176,33 +178,39 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 
 /*read*/
 static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_pos){
+
+	char k_buf[256];
+
+	if( !copy_from_user(k_buf, buf, count) ){
+		return 0;
+	}
 	
 	
 	/*処理*/
 	printk( KERN_INFO "myled: myled_read is called.\n" );
 
 	// 緑点灯
-	if( strncmp(buf, "HG", sizeof(buf)) ){
+	if( strncmp(k_buf, "HG", count) ){
 		gpioSet(GPIO4);
 	}
 	// 黄色点灯
-	if( strncmp(buf, "HY", sizeof(buf)) ){
+	if( strncmp(k_buf, "HY", count) ){
 		gpioSet(GPIO3);	
 	}
 	// 赤色点灯
-	if( strncmp(buf, "HR", sizeof(buf)) ){
+	if( strncmp(k_buf, "HR", count) ){
 		gpioSet(GPIO2);	
 	}
 	// 緑色消灯
-	if( strncmp(buf, "LG", sizeof(buf)) ){
+	if( strncmp(k_buf, "LG", count) ){
 		gpioClear(GPIO4);
 	}
 	// 黄色消灯
-	if( strncmp(buf, "LY", sizeof(buf)) ){
+	if( strncmp(k_buf, "LY", count) ){
 		gpioClear(GPIO3);	
 	}
 	// 赤色消灯
-	if( strncmp(buf, "LR", sizeof(buf)) ){
+	if( strncmp(k_buf, "LR", count) ){
 		gpioClear(GPIO2);	
 	}
 
@@ -210,7 +218,7 @@ static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_
 	
 	
 	/*戻り値は必ず読み込んだ文字数にすること。*/
-	return 0;
+	return count;
 }
 
 
