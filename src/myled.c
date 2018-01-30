@@ -19,8 +19,6 @@
 #include <linux/kernel.h>
 #include <linux/io.h>
 
-#include <kernel/kmalloc.h>
-
 #define BASEADD 0x3F200000 // rpi2/3
 // #define BASEADD 0x2000000 // rpi1
 
