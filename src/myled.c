@@ -38,21 +38,22 @@
 #define GPIOH *((volatile uint32_t*)(gpio_map+0x1c))
 #define GPIOL *((volatile uint32_t*)(gpio_map+0x28))
 
-#define GPIO1 0x01
-#define GPIO2 0x02
-#define GPIO3 0x03
-#define GPIO4 0x04
-#define GPIO5 0x05
-#define GPIO6 0x06
-#define GPIO7 0x07
-#define GPIO8 0x08
-#define GPIO9 0x09
-#define GPIOA 0x0A
-#define GPIOB 0x0B
-#define GPIOC 0x0C
-#define GPIOD 0x0D
-#define GPIOE 0x0E
-#define GPIOF 0x0F
+#define GPIO0 0x01
+#define GPIO1 0x02
+#define GPIO2 0x04
+#define GPIO3 0x08
+#define GPIO4 0x10
+#define GPIO5 0x20
+// #define GPIO6 0x06
+// #define GPIO7 0x07
+// #define GPIO8 0x08
+// #define GPIO9 0x09
+// #define GPIOA 0x0A
+// #define GPIOB 0x0B
+// #define GPIOC 0x0C
+// #define GPIOD 0x0D
+// #define GPIOE 0x0E
+// #define GPIOF 0x0F
 
 
 static void __iomem *gpio_map; //仮想アドレスと物理アドレスのマッピング
@@ -179,7 +180,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	// 緑点灯
 	if( !strncmp(k_buf, "HG", count) ){
 		printk( KERN_INFO "HG.\n");
-		gpioSet(GPIO4);
+		gpioSet(GPIO2);
 	}
 	// 黄色点灯
 	if( !strncmp(k_buf, "HY", count) ){
@@ -189,11 +190,11 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	// 赤色点灯
 	if( !strncmp(k_buf, "HR", count) ){
 		printk( KERN_INFO "HR.\n");
-		gpioSet(GPIO2);	
+		gpioSet(GPIO4);	
 	}
 	// 緑色消灯
 	if( !strncmp(k_buf, "LG", count) ){
-		gpioClear(GPIO4);
+		gpioClear(GPIO2);
 	}
 	// 黄色消灯
 	if( !strncmp(k_buf, "LY", count) ){
@@ -201,7 +202,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	}
 	// 赤色消灯
 	if( !strncmp(k_buf, "LR", count) ){
-		gpioClear(GPIO2);	
+		gpioClear(GPIO4);	
 	}
 	
 	
