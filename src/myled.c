@@ -177,28 +177,28 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	printk( KERN_INFO "number: %s %d.\n",k_buf ,count);
 
 	// 緑点灯
-	if( strncmp(k_buf, "HG", count) ){
+	if( !strncmp(k_buf, "HG", count) ){
 		printk( KERN_INFO "HG.\n");
 		gpioSet(GPIO4);
 	}
 	// 黄色点灯
-	if( strncmp(k_buf, "HY", count) ){
+	if( !strncmp(k_buf, "HY", count) ){
 		gpioSet(GPIO3);	
 	}
 	// 赤色点灯
-	if( strncmp(k_buf, "HR", count) ){
+	if( !strncmp(k_buf, "HR", count) ){
 		gpioSet(GPIO2);	
 	}
 	// 緑色消灯
-	if( strncmp(k_buf, "LG", count) ){
+	if( !strncmp(k_buf, "LG", count) ){
 		gpioClear(GPIO4);
 	}
 	// 黄色消灯
-	if( strncmp(k_buf, "LY", count) ){
+	if( !strncmp(k_buf, "LY", count) ){
 		gpioClear(GPIO3);	
 	}
 	// 赤色消灯
-	if( strncmp(k_buf, "LR", count) ){
+	if( !strncmp(k_buf, "LR", count) ){
 		gpioClear(GPIO2);	
 	}
 	
