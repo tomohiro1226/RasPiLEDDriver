@@ -113,20 +113,6 @@ static int myled_init(void){
 	// 3色LEDの設定
 	GPFSEL0 = 011100;
 
-	// 実験
-	// gpioSet(GPIO4);
-	// msleep(1000);
-	// gpioClear(GPIO4);
-	// msleep(1000);
-	// gpioSet(GPIO4);
-	// msleep(1000);
-	// gpioClear(GPIO4);
-	// msleep(1000);
-	// gpioSet(GPIO4);
-	// msleep(1000);
-	// gpioClear(GPIO4);
-	// msleep(1000);
-	
 	return 0;
 }
 
@@ -175,21 +161,17 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	
 	//処理
 	printk( KERN_INFO "myled: myled_write is called.\n" );
-	printk( KERN_INFO "number: %s %d.\n",k_buf ,count);
 
 	// 緑点灯
 	if( !strncmp(k_buf, "HG", count) ){
-		printk( KERN_INFO "HG.\n");
 		gpioSet(GPIO2);
 	}
 	// 黄色点灯
 	if( !strncmp(k_buf, "HY", count) ){
-		printk( KERN_INFO "HY.\n");
 		gpioSet(GPIO3);	
 	}
 	// 赤色点灯
 	if( !strncmp(k_buf, "HR", count) ){
-		printk( KERN_INFO "HR.\n");
 		gpioSet(GPIO4);	
 	}
 	// 緑色消灯
@@ -203,6 +185,39 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	// 赤色消灯
 	if( !strncmp(k_buf, "LR", count) ){
 		gpioClear(GPIO4);	
+	}
+
+
+	// パターンA
+	if( !strncmp(k_buf, "PA", count) ){
+		gpioSet(GPIO2);
+		msleep(1000);
+		gpioSet(GPIO3);
+		msleep(1000);
+		gpioSet(GPIO4);
+		msleep(1000);
+
+		gpioClear(GPIO2);
+		msleep(1000);
+		gpioClear(GPIO3);
+		msleep(1000);
+		gpioClear(GPIO4);
+	}
+
+	// パターンB
+	if( !strncmp(k_buf, "PB", count) ){
+		gpioSet(GPIO2);
+		msleep(1000);
+
+		gpioClear(GPIO2);
+		gpioSet(GPIO4);
+		msleep(1000);
+
+		gpioClear(GPIO4);
+		gpioSet(GPIO3);	
+		msleep(1000);
+		
+		gpioClear(GPIO3);
 	}
 	
 	
