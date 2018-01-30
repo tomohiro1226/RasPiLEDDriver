@@ -109,23 +109,22 @@ static int myled_init(void){
 	gpioInit();
 
 	// 2-4を出力設定
-	#define GPIOMODE 011100
 	// 3色LEDの設定
-	GPFSEL0 = GPIOMODE;
+	GPFSEL0 = 011100;
 
 	// 実験
-	gpioSet(GPIO4);
-	msleep(1000);
-	gpioClear(GPIO4);
-	msleep(1000);
-	gpioSet(GPIO4);
-	msleep(1000);
-	gpioClear(GPIO4);
-	msleep(1000);
-	gpioSet(GPIO4);
-	msleep(1000);
-	gpioClear(GPIO4);
-	msleep(1000);
+	// gpioSet(GPIO4);
+	// msleep(1000);
+	// gpioClear(GPIO4);
+	// msleep(1000);
+	// gpioSet(GPIO4);
+	// msleep(1000);
+	// gpioClear(GPIO4);
+	// msleep(1000);
+	// gpioSet(GPIO4);
+	// msleep(1000);
+	// gpioClear(GPIO4);
+	// msleep(1000);
 	
 	return 0;
 }
@@ -181,6 +180,33 @@ static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_
 	
 	/*処理*/
 	printk( KERN_INFO "myled: myled_read is called.\n" );
+
+	// 緑点灯
+	if( strncmp(buf, "HG", sizeof(buf)) ){
+		gpioSet(GPIO4);
+	}
+	// 黄色点灯
+	if( strncmp(buf, "HY", sizeof(buf)) ){
+		gpioSet(GPIO3);	
+	}
+	// 赤色点灯
+	if( strncmp(buf, "HR", sizeof(buf)) ){
+		gpioSet(GPIO2);	
+	}
+	// 緑色消灯
+	if( strncmp(buf, "LG", sizeof(buf)) ){
+		gpioClear(GPIO4);
+	}
+	// 黄色消灯
+	if( strncmp(buf, "LY", sizeof(buf)) ){
+		gpioClear(GPIO3);	
+	}
+	// 赤色消灯
+	if( strncmp(buf, "LR", sizeof(buf)) ){
+		gpioClear(GPIO2);	
+	}
+
+
 	
 	
 	/*戻り値は必ず読み込んだ文字数にすること。*/
