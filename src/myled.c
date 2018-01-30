@@ -167,27 +167,14 @@ static int myled_close(struct inode *inode, struct file *filp)
 #define K_BUFF_SIZE     64
 static ssize_t myled_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos){
 	
-	
-	//処理
-	printk( KERN_INFO "myled: myled_write is called.\n" );
-	
-	
-	/*戻り値は書き込んだ文字数にすること*/
-	return 0;
-}
-
-/*read*/
-static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_pos){
-
 	char k_buf[256];
 
 	if( !copy_from_user(k_buf, buf, count) ){
 		return 0;
 	}
 	
-	
-	/*処理*/
-	printk( KERN_INFO "myled: myled_read is called.\n" );
+	//処理
+	printk( KERN_INFO "myled: myled_write is called.\n" );
 
 	// 緑点灯
 	if( strncmp(k_buf, "HG", count) ){
@@ -213,6 +200,22 @@ static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_
 	if( strncmp(k_buf, "LR", count) ){
 		gpioClear(GPIO2);	
 	}
+	
+	
+	/*戻り値は書き込んだ文字数にすること*/
+	return count;
+}
+
+/*read*/
+static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_pos){
+
+	
+	
+	
+	/*処理*/
+	printk( KERN_INFO "myled: myled_read is called.\n" );
+
+	
 
 
 	
