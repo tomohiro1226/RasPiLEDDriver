@@ -107,6 +107,9 @@ static int myled_init(void){
 	GPFSEL0 |= 01111111100;
 	GPFSEL1 |= 0111;
 
+	ledClear();
+	segClear();
+
 	return 0;
 }
 
@@ -147,7 +150,27 @@ static int myled_close(struct inode *inode, struct file *filp)
 static ssize_t myled_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos){
 	
 	char k_buf[256];
+	int node = 0;
+	char pattern[2][2][6] = {
+		{
+			{'H', 'G'},
+			{'H', 'Y'},
+			{'H', 'R'},
+			{'L', 'G'},
+			{'L', 'Y'},
+			{'L', 'R'}
+		},
+		{
+			{'H', 'Y'},
+			{'L', 'Y'},
+			{'H', 'R'},
+			{'L', 'R'}	
+			{'H', 'G'},
+			{'L', 'G'},
+		}
+	}
 	
+	printk( KERN_INFO "myled: myled_write is called.\n" );
 
 	if( copy_from_user(k_buf, buf, count) != 0 ){
 		return 0;
@@ -155,9 +178,19 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	k_buf[count] = '\0';
 	
 	//処理
-	printk( KERN_INFO "myled: myled_write is called.\n" );
 
 	if( k_buf[0]=='P' ){
+
+		if( k_buf[1]=='A' ){
+			node = 0;
+		}else
+		if( k_buf[1]=='B' ){
+			node = 1;
+		}
+
+		for(i=0; i<6; i++){
+			def(pattern[node][0][i], pattern[node][1][i]);
+		}
 
 	}else	
 	if( k_buf[0]=='X' ){
@@ -214,45 +247,42 @@ void gpioExit(void){
  * @func 7セグの全消灯
 */
 void segClear(void){
-	// gpioSet(A_7SEG);	
-	// gpioSet(B_7SEG);
-	// gpioSet(C_7SEG);
-	// gpioSet(D_7SEG);
-	// gpioSet(E_7SEG);
-	// gpioSet(F_7SEG);
-	// gpioSet(G_7SEG);
-	// gpioSet(D_P_7SEG);
+
+	def('H', A_7SEG);
+	def('H', B_7SEG);
+	def('H', C_7SEG);
+	def('H', D_7SEG);
+	def('H', E_7SEG);
+	def('H', F_7SEG);
+	def('H', G_7SEG);
+	def('H', D_P_7SEG);
 }
 
 /**
  * @func LEDの全消灯
 */
 void ledClear(void){
-	// gpioClear(YELLOW);
-	// gpioClear(GREEN);
-	// gpioClear(RED);
+
+	def('L', YELLOW);
+	def('L', GREEN);
+	def('L', RED);
 }
 
 void  def(char a, char b){
 
 	volatile u_int32_t *base;
 
-	printk( KERN_INFO "def a=%c b=%c\n", a, b);
-	// *base=(a=='H')? GPIOH : GPIOL;	
 	if( a=='H' ){
 		base = &GPIOH;
 	}else{
 		base = &GPIOL;
 	}
 
-	printk( KERN_INFO "gpio set.\n" );
-	
 	switch(b){
 
 		// LED
 		case 'G':
 			*base = (1<<GREEN);
-			printk( KERN_INFO "green\n" );
 			break;
 		
 		case 'Y':
