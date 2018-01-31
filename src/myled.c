@@ -117,9 +117,10 @@ static int myled_init(void){
 	// ledドライバの設定
 	gpioInit();
 
-	// 2-4を出力設定
-	// 3色LEDの設定
-	GPFSEL0 = 011100;
+	// GPIOピンの出力設定
+	// 3色LEDの設定 and 7セグの設定
+	GPFSEL0 |= 01111111100;
+	GPFSEL1 |= 0111;
 
 	return 0;
 }
