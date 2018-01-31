@@ -235,7 +235,7 @@ void ledClear(void){
 
 void  def(char a, char b){
 
-	u_int32_t *base;
+	u_int32_t *base = NULL;
 
 	*base = (a == 'H') ? GPIOH : GPIOL;	
 
