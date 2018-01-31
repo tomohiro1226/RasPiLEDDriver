@@ -123,9 +123,18 @@ static int myled_init(void){
 	GPFSEL1 |= 0111;
 
 	// 7セグの初期設定(全消灯)
-	printk(KERN_INFO "SEG 0x%x", GPIOH);
-	GPIOH = 0x1FE0;
-	printk(KERN_INFO "SEG 0x%x", GPIOH);
+	gpioSet(A_7SEG);	
+	gpioSet(B_7SEG);
+	gpioSet(C_7SEG);
+	gpioSet(D_7SEG);
+	gpioSet(E_7SEG);
+	gpioSet(F_7SEG);
+	gpioSet(G_7SEG);
+	gpioSet(D_P_7SEG);
+
+	gpioClear(YELLOW);
+	gpioClear(GREEN);
+	gpioClear(RED);
 
 	return 0;
 }
@@ -328,7 +337,7 @@ int gpioSet(uint32_t g){
 int gpioClear(uint32_t g){
     GPIOL = g;
 
-    return (GPIOH==g) ? 0 : 1;
+    return (GPIOL==g) ? 0 : 1;
 }
 
 int gpioExit(void){
