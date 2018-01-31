@@ -38,17 +38,17 @@
 #define GPIOH *((volatile uint32_t*)(gpio_map+0x1c))
 #define GPIOL *((volatile uint32_t*)(gpio_map+0x28))
 
-#define GPIO2 0x04
-#define GPIO3 0x08
-#define GPIO4 0x10
-#define GPIO5 0x20
-#define GPIO6 0x40
-#define GPIO7 0x80
-#define GPIO8 0x100
-#define GPIO9 0x200
-#define GPIOA 0x400
-#define GPIOB 0x800
-#define GPIOC 0x1000
+#define GPIO2 (1<<2) 
+#define GPIO3 (1<<3) 
+#define GPIO4 (1<<4) 
+#define GPIO5 (1<<5)
+#define GPIO6 (1<<6)
+#define GPIO7 (1<<7)
+#define GPIO8 (1<<8)
+#define GPIO9 (1<<9)
+#define GPIOA (1<<10)
+#define GPIOB (1<<11)
+#define GPIOC (1<<12)
 
 // LEDとGPIOのペア
 #define	GREEN	GPIO2	 
@@ -124,7 +124,7 @@ static int myled_init(void){
 
 	// 7セグの初期設定(全消灯)
 	printk(KERN_INFO "SEG 0x%x", GPIOH);
-	GPIOH |= 0x1FE0;
+	GPIOH = 0x1FE0;
 	printk(KERN_INFO "SEG 0x%x", GPIOH);
 
 	return 0;
