@@ -73,7 +73,7 @@ void gpioExit(void);
 void  def(char a, char b);
 void segClear(void);
 void ledClear(void);
-
+void evo(int n);
 
 /*コールバック*/
 static struct file_operations myled_fops = {
@@ -344,14 +344,14 @@ void  def(char a, char b){
 void evo(int n){
 
 	// ダサいコードだが...。
-	int ary[15] = {
+	int ary[16] = {
 		0x7E0, 0xC0, 0xB60, 0x9F0, 0xCC0, 0xDA0, 0xFA0, 0xE0, // 0 - 7 
 		0xFE0, 0xDE0, 0xEE0, 0xF80, 0x720, 0xBC0, 0xF20, 0xE20  // 8 - F 
-	}
+	};
 
 	//　0-15の間じゃなかったら
 	if( n<0 || n>15){
-		printk(KERN_INFO "Err: evo is number 0-15 only\n")
+		printk(KERN_INFO "Err: evo is number 0-15 only\n");
 	}
 
 	GPIOL = ary[n];
