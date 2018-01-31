@@ -50,6 +50,12 @@
 #define G_7SEG	11
 #define D_P_7SEG	12
 
+#define S0 0x7E0
+#define S1 0xC0
+#define S2 0xB60
+#define S3 0x9F0
+
+
 
 static void __iomem *gpio_map; //仮想アドレスと物理アドレスのマッピング
 
@@ -195,6 +201,29 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 
 	}else	
 	if( k_buf[0]=='X' ){
+
+		segClear();
+		switch( k_buf[1] ){
+
+			case '0':
+				GPIOL=S0;
+				break;
+
+			case '1':
+				GPIOL=S1;
+				break;
+
+			case '2':
+				GPIOL=S2;
+				break;
+
+			case '3':
+				GPIOL=S3;
+				break;
+
+			default:
+				break;
+		}
 
 	}else
 	if( k_buf[0]=='H' || k_buf[0]=='L' ){
