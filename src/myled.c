@@ -200,7 +200,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 			evo( (int)(k_buf[1]-'0') );
 		}
 		if( k_buf[1]>='A' && k_buf[1]<='F' ){
-			evo( (int)(k_buf[1]-'A') );
+			evo( (int)(k_buf[1]-'A'+10) );
 		}
 
 	}else
