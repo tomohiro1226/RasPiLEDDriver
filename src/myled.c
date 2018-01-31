@@ -190,6 +190,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 
 		for(i=0; i<6; i++){
 			def(pattern[node][i][0], pattern[node][i][1]);
+			msleep(1000);
 		}
 
 	}else	
@@ -248,14 +249,14 @@ void gpioExit(void){
 */
 void segClear(void){
 
-	def('H', A_7SEG);
-	def('H', B_7SEG);
-	def('H', C_7SEG);
-	def('H', D_7SEG);
-	def('H', E_7SEG);
-	def('H', F_7SEG);
-	def('H', G_7SEG);
-	def('H', D_P_7SEG);
+	def('H', A);
+	def('H', B);
+	def('H', C);
+	def('H', D);
+	def('H', E);
+	def('H', F);
+	def('H', H);
+	def('H', I);
 }
 
 /**
@@ -263,9 +264,9 @@ void segClear(void){
 */
 void ledClear(void){
 
-	def('L', YELLOW);
-	def('L', GREEN);
-	def('L', RED);
+	def('L', Y);
+	def('L', G);
+	def('L', R);
 }
 
 void  def(char a, char b){
