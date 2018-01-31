@@ -38,22 +38,30 @@
 #define GPIOH *((volatile uint32_t*)(gpio_map+0x1c))
 #define GPIOL *((volatile uint32_t*)(gpio_map+0x28))
 
-#define GPIO0 0x01
-#define GPIO1 0x02
 #define GPIO2 0x04
 #define GPIO3 0x08
 #define GPIO4 0x10
 #define GPIO5 0x20
-// #define GPIO6 0x06
-// #define GPIO7 0x07
-// #define GPIO8 0x08
-// #define GPIO9 0x09
-// #define GPIOA 0x0A
-// #define GPIOB 0x0B
-// #define GPIOC 0x0C
-// #define GPIOD 0x0D
-// #define GPIOE 0x0E
-// #define GPIOF 0x0F
+#define GPIO6 0x40
+#define GPIO7 0x80
+#define GPIO8 0x100
+#define GPIO9 0x200
+#define GPIOA 0x400
+#define GPIOB 0x800
+#define GPIOC 0x1000
+
+// LEDとGPIOのペア
+#define	GREEN	GPIO2	 
+#define YELLOW	GPIO3
+#define RED		GPIO4
+#define A_7SEG	GPIO5
+#define B_7SEG	GPIO6
+#define C_7SEG	GPIO7
+#define D_7SEG	GPIO8
+#define E_7SEG	GPIO9
+#define F_7SEG	GPIOA
+#define G_7SEG	GPIOB
+#define D_P_7SEG	GPIOC
 
 
 static void __iomem *gpio_map; //仮想アドレスと物理アドレスのマッピング
@@ -162,63 +170,109 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	//処理
 	printk( KERN_INFO "myled: myled_write is called.\n" );
 
-	// 緑点灯
+	// LED
 	if( !strncmp(k_buf, "HG", count) ){
-		gpioSet(GPIO2);
+		gpioSet(GREEN);
 	}
-	// 黄色点灯
 	if( !strncmp(k_buf, "HY", count) ){
-		gpioSet(GPIO3);	
+		gpioSet(YELLOW);	
 	}
-	// 赤色点灯
 	if( !strncmp(k_buf, "HR", count) ){
-		gpioSet(GPIO4);	
+		gpioSet(RED);	
 	}
-	// 緑色消灯
 	if( !strncmp(k_buf, "LG", count) ){
-		gpioClear(GPIO2);
+		gpioClear(GREEN);
 	}
-	// 黄色消灯
 	if( !strncmp(k_buf, "LY", count) ){
-		gpioClear(GPIO3);	
+		gpioClear(YELLOW);	
 	}
-	// 赤色消灯
 	if( !strncmp(k_buf, "LR", count) ){
-		gpioClear(GPIO4);	
+		gpioClear(RED);	
 	}
 
 
 	// パターンA
 	if( !strncmp(k_buf, "PA", count) ){
-		gpioSet(GPIO2);
+		gpioSet(GREEN);
 		msleep(1000);
-		gpioSet(GPIO3);
+		gpioSet(YELLOW);
 		msleep(1000);
-		gpioSet(GPIO4);
+		gpioSet(RED);
 		msleep(1000);
 
-		gpioClear(GPIO2);
+		gpioClear(GREEN);
 		msleep(1000);
-		gpioClear(GPIO3);
+		gpioClear(YELLOW);
 		msleep(1000);
-		gpioClear(GPIO4);
+		gpioClear(RED);
 	}
 
 	// パターンB
 	if( !strncmp(k_buf, "PB", count) ){
-		gpioSet(GPIO2);
+		gpioSet(GREEN);
 		msleep(1000);
 
-		gpioClear(GPIO2);
-		gpioSet(GPIO4);
+		gpioClear(GREEN);
+		gpioSet(RED);
 		msleep(1000);
 
-		gpioClear(GPIO4);
-		gpioSet(GPIO3);	
+		gpioClear(RED);
+		gpioSet(YELLOW);	
 		msleep(1000);
 		
-		gpioClear(GPIO3);
+		gpioClear(YELLOW);
 	}
+
+	// 7セグ
+	if( !strncmp(k_buf, "HA", count) ){
+		gpioSet(A_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HB", count) ){
+		gpioSet(B_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HC", count) ){
+		gpioSet(C_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HD", count) ){
+		gpioSet(D_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HE", count) ){
+		gpioSet(E_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HF", count) ){
+		gpioSet(F_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HH", count) ){
+		gpioSet(G_7SEG);	
+	}	
+	if( !strncmp(k_buf, "HI", count) ){
+		gpioSet(D_P_7SEG);	
+	}
+
+	if( !strncmp(k_buf, "LA", count) ){
+		gpioClear(A_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LB", count) ){
+		gpioClear(B_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LC", count) ){
+		gpioClear(C_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LD", count) ){
+		gpioClear(D_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LE", count) ){
+		gpioClear(E_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LF", count) ){
+		gpioClear(F_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LH", count) ){
+		gpioClear(G_7SEG);	
+	}	
+	if( !strncmp(k_buf, "LI", count) ){
+		gpioClear(D_P_7SEG);	
+	}	
 	
 	
 	/*戻り値は書き込んだ文字数にすること*/
@@ -228,16 +282,8 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 /*read*/
 static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_pos){
 
-	
-	
-	
 	/*処理*/
 	printk( KERN_INFO "myled: myled_read is called.\n" );
-
-	
-
-
-	
 	
 	/*戻り値は必ず読み込んだ文字数にすること。*/
 	return count;
