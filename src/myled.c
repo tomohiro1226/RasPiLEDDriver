@@ -235,15 +235,24 @@ void ledClear(void){
 
 void  def(char a, char b){
 
-	u_int32_t *base = NULL;
+	volatile u_int32_t *base;
 
-	*base = (a == 'H') ? GPIOH : GPIOL;	
+	printk( KERN_INFO "def a=%c b=%c\n", a, b);
+	// *base=(a=='H')? GPIOH : GPIOL;	
+	if( a=='H' ){
+		base = &GPIOH;
+	}else{
+		base = &GPIOL;
+	}
 
+	printk( KERN_INFO "gpio set.\n" );
+	
 	switch(b){
 
 		// LED
 		case 'G':
 			*base = (1<<GREEN);
+			printk( KERN_INFO "green\n" );
 			break;
 		
 		case 'Y':
