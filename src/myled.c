@@ -122,6 +122,9 @@ static int myled_init(void){
 	GPFSEL0 |= 01111111100;
 	GPFSEL1 |= 0111;
 
+	// 7セグの初期設定(全消灯)
+	GPIOH |= 0x1FE0;
+
 	return 0;
 }
 
@@ -226,53 +229,53 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 
 	// 7セグ
 	if( !strncmp(k_buf, "HA", count) ){
-		gpioSet(A_7SEG);	
+		gpioClear(A_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HB", count) ){
-		gpioSet(B_7SEG);	
+		gpioClear(B_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HC", count) ){
-		gpioSet(C_7SEG);	
+		gpioClear(C_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HD", count) ){
-		gpioSet(D_7SEG);	
+		gpioClear(D_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HE", count) ){
-		gpioSet(E_7SEG);	
+		gpioClear(E_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HF", count) ){
-		gpioSet(F_7SEG);	
+		gpioClear(F_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HH", count) ){
-		gpioSet(G_7SEG);	
+		gpioClear(G_7SEG);	
 	}	
 	if( !strncmp(k_buf, "HI", count) ){
-		gpioSet(D_P_7SEG);	
+		gpioClear(D_P_7SEG);	
 	}
 
 	if( !strncmp(k_buf, "LA", count) ){
-		gpioClear(A_7SEG);	
+		gpioSet(A_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LB", count) ){
-		gpioClear(B_7SEG);	
+		gpioSet(B_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LC", count) ){
-		gpioClear(C_7SEG);	
+		gpioSet(C_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LD", count) ){
-		gpioClear(D_7SEG);	
+		gpioSet(D_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LE", count) ){
-		gpioClear(E_7SEG);	
+		gpioSet(E_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LF", count) ){
-		gpioClear(F_7SEG);	
+		gpioSet(F_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LH", count) ){
-		gpioClear(G_7SEG);	
+		gpioSet(G_7SEG);	
 	}	
 	if( !strncmp(k_buf, "LI", count) ){
-		gpioClear(D_P_7SEG);	
+		gpioSet(D_P_7SEG);	
 	}	
 	
 	
