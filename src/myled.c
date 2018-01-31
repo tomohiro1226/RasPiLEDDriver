@@ -249,14 +249,14 @@ void gpioExit(void){
 */
 void segClear(void){
 
-	def('H', A);
-	def('H', B);
-	def('H', C);
-	def('H', D);
-	def('H', E);
-	def('H', F);
-	def('H', H);
-	def('H', I);
+	def('H', 'A');
+	def('H', 'B');
+	def('H', 'C');
+	def('H', 'D');
+	def('H', 'E');
+	def('H', 'F');
+	def('H', 'H');
+	def('H', 'I');
 }
 
 /**
@@ -264,9 +264,9 @@ void segClear(void){
 */
 void ledClear(void){
 
-	def('L', Y);
-	def('L', G);
-	def('L', R);
+	def('L', 'Y');
+	def('L', 'G');
+	def('L', 'R');
 }
 
 void  def(char a, char b){
