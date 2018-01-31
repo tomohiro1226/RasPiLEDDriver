@@ -71,6 +71,10 @@ static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_
 
 int gpioInit(void);
 void gpioExit(void);
+void  def(char a, char b);
+void segClear(void);
+void ledClear(void);
+
 
 /*コールバック*/
 static struct file_operations myled_fops = {
@@ -162,7 +166,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	if( k_buf[0]=='H' || k_buf[0]=='L' ){
 
 		def(k_buf[0], k_buf[1]);
-		
+
 	}
 
 	/*戻り値は書き込んだ文字数にすること*/
@@ -210,78 +214,80 @@ void gpioExit(void){
  * @func 7セグの全消灯
 */
 void segClear(void){
-	gpioSet(A_7SEG);	
-	gpioSet(B_7SEG);
-	gpioSet(C_7SEG);
-	gpioSet(D_7SEG);
-	gpioSet(E_7SEG);
-	gpioSet(F_7SEG);
-	gpioSet(G_7SEG);
-	gpioSet(D_P_7SEG);
+	// gpioSet(A_7SEG);	
+	// gpioSet(B_7SEG);
+	// gpioSet(C_7SEG);
+	// gpioSet(D_7SEG);
+	// gpioSet(E_7SEG);
+	// gpioSet(F_7SEG);
+	// gpioSet(G_7SEG);
+	// gpioSet(D_P_7SEG);
 }
 
 /**
  * @func LEDの全消灯
 */
 void ledClear(void){
-	gpioClear(YELLOW);
-	gpioClear(GREEN);
-	gpioClear(RED);
+	// gpioClear(YELLOW);
+	// gpioClear(GREEN);
+	// gpioClear(RED);
 }
 
 void  def(char a, char b){
 
 	u_int32_t *base;
-	#define PBASE *base;
 
-	*base = (a == "H") ? GPIOH : GPIOL;	
+	*base = (a == 'H') ? GPIOH : GPIOL;	
 
 	switch(b){
 
 		// LED
 		case 'G':
-			PBASE = (1<<GREEN);
+			*base = (1<<GREEN);
 			break;
 		
 		case 'Y':
-			PBASE = (1<<YELLOW);
+			*base = (1<<YELLOW);
 			break;
 
 		case 'R':
-			PBASE = (1<<RED);
+			*base = (1<<RED);
 			break;
 
 		// 7セグ
 		case 'A':
-			PBASE = (1<<A_7SEG);
+			*base = (1<<A_7SEG);
 			break;
 		
 		case 'B':
-			PBASE = (1<<B_7SEG);
+			*base = (1<<B_7SEG);
 			break;
 
 		case 'C':
-			PBASE = (1<<C_7SEG);
+			*base = (1<<C_7SEG);
 			break;
 
 		case 'D':
-			PBASE = (1<<D_7SEG);
+			*base = (1<<D_7SEG);
 			break;
 
 		case 'E':
-			PBASE = (1<<E_7SEG);
+			*base = (1<<E_7SEG);
 			break;
 
 		case 'F':
-			PBASE = (1<<F_7SEG);
+			*base = (1<<F_7SEG);
 			break;
 
 		case 'H':
-			PBASE = (1<<G_7SEG);
+			*base = (1<<G_7SEG);
 			break;
 
 		case 'I':
-			PBASE = (1<<D_P_7SEG);
+			*base = (1<<D_P_7SEG);
+			break;
+
+		default:
 			break;
 		
 	}
