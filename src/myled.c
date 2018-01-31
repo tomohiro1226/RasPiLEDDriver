@@ -123,7 +123,9 @@ static int myled_init(void){
 	GPFSEL1 |= 0111;
 
 	// 7セグの初期設定(全消灯)
+	printk(KERN_INFO "SEG 0x%x", GPIOH);
 	GPIOH |= 0x1FE0;
+	printk(KERN_INFO "SEG 0x%x", GPIOH);
 
 	return 0;
 }
