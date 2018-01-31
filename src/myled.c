@@ -38,30 +38,17 @@
 #define GPIOH *((volatile uint32_t*)(gpio_map+0x1c))
 #define GPIOL *((volatile uint32_t*)(gpio_map+0x28))
 
-#define GPIO2 (1<<2) 
-#define GPIO3 (1<<3) 
-#define GPIO4 (1<<4) 
-#define GPIO5 (1<<5)
-#define GPIO6 (1<<6)
-#define GPIO7 (1<<7)
-#define GPIO8 (1<<8)
-#define GPIO9 (1<<9)
-#define GPIOA (1<<10)
-#define GPIOB (1<<11)
-#define GPIOC (1<<12)
-
-// LEDとGPIOのペア
-#define	GREEN	GPIO2	 
-#define YELLOW	GPIO3
-#define RED		GPIO4
-#define A_7SEG	GPIO5
-#define B_7SEG	GPIO6
-#define C_7SEG	GPIO7
-#define D_7SEG	GPIO8
-#define E_7SEG	GPIO9
-#define F_7SEG	GPIOA
-#define G_7SEG	GPIOB
-#define D_P_7SEG	GPIOC
+#define	GREEN	2	 
+#define YELLOW	3
+#define RED		4
+#define A_7SEG	5
+#define B_7SEG	6
+#define C_7SEG	7
+#define D_7SEG	8
+#define E_7SEG	9
+#define F_7SEG	10
+#define G_7SEG	11
+#define D_P_7SEG	12
 
 
 static void __iomem *gpio_map; //仮想アドレスと物理アドレスのマッピング
@@ -83,13 +70,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 static ssize_t myled_read(struct file *filp, char *buf, size_t count, loff_t *f_pos);
 
 int gpioInit(void);
-int gpioExit(void);
-int gpioMode(uint32_t b, uint32_t s);
-int gpioSet(uint32_t g);
-int gpioClear(uint32_t g);
-
-
-/*グローバル変数の宣言*/
+void gpioExit(void);
 
 /*コールバック*/
 static struct file_operations myled_fops = {
@@ -121,20 +102,6 @@ static int myled_init(void){
 	// 3色LEDの設定 and 7セグの設定
 	GPFSEL0 |= 01111111100;
 	GPFSEL1 |= 0111;
-
-	// 7セグの初期設定(全消灯)
-	gpioSet(A_7SEG);	
-	gpioSet(B_7SEG);
-	gpioSet(C_7SEG);
-	gpioSet(D_7SEG);
-	gpioSet(E_7SEG);
-	gpioSet(F_7SEG);
-	gpioSet(G_7SEG);
-	gpioSet(D_P_7SEG);
-
-	gpioClear(YELLOW);
-	gpioClear(GREEN);
-	gpioClear(RED);
 
 	return 0;
 }
@@ -176,6 +143,7 @@ static int myled_close(struct inode *inode, struct file *filp)
 static ssize_t myled_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos){
 	
 	char k_buf[256];
+	
 
 	if( copy_from_user(k_buf, buf, count) != 0 ){
 		return 0;
@@ -185,111 +153,18 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 	//処理
 	printk( KERN_INFO "myled: myled_write is called.\n" );
 
-	// LED
-	if( !strncmp(k_buf, "HG", count) ){
-		gpioSet(GREEN);
-	}
-	if( !strncmp(k_buf, "HY", count) ){
-		gpioSet(YELLOW);	
-	}
-	if( !strncmp(k_buf, "HR", count) ){
-		gpioSet(RED);	
-	}
-	if( !strncmp(k_buf, "LG", count) ){
-		gpioClear(GREEN);
-	}
-	if( !strncmp(k_buf, "LY", count) ){
-		gpioClear(YELLOW);	
-	}
-	if( !strncmp(k_buf, "LR", count) ){
-		gpioClear(RED);	
-	}
+	if( k_buf[0]=='P' ){
 
+	}else	
+	if( k_buf[0]=='X' ){
 
-	// パターンA
-	if( !strncmp(k_buf, "PA", count) ){
-		gpioSet(GREEN);
-		msleep(1000);
-		gpioSet(YELLOW);
-		msleep(1000);
-		gpioSet(RED);
-		msleep(1000);
+	}else
+	if( k_buf[0]=='H' || k_buf[0]=='L' ){
 
-		gpioClear(GREEN);
-		msleep(1000);
-		gpioClear(YELLOW);
-		msleep(1000);
-		gpioClear(RED);
-	}
-
-	// パターンB
-	if( !strncmp(k_buf, "PB", count) ){
-		gpioSet(GREEN);
-		msleep(1000);
-
-		gpioClear(GREEN);
-		gpioSet(RED);
-		msleep(1000);
-
-		gpioClear(RED);
-		gpioSet(YELLOW);	
-		msleep(1000);
+		def(k_buf[0], k_buf[1]);
 		
-		gpioClear(YELLOW);
 	}
 
-	// 7セグ
-	if( !strncmp(k_buf, "HA", count) ){
-		gpioClear(A_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HB", count) ){
-		gpioClear(B_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HC", count) ){
-		gpioClear(C_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HD", count) ){
-		gpioClear(D_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HE", count) ){
-		gpioClear(E_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HF", count) ){
-		gpioClear(F_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HH", count) ){
-		gpioClear(G_7SEG);	
-	}	
-	if( !strncmp(k_buf, "HI", count) ){
-		gpioClear(D_P_7SEG);	
-	}
-
-	if( !strncmp(k_buf, "LA", count) ){
-		gpioSet(A_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LB", count) ){
-		gpioSet(B_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LC", count) ){
-		gpioSet(C_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LD", count) ){
-		gpioSet(D_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LE", count) ){
-		gpioSet(E_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LF", count) ){
-		gpioSet(F_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LH", count) ){
-		gpioSet(G_7SEG);	
-	}	
-	if( !strncmp(k_buf, "LI", count) ){
-		gpioSet(D_P_7SEG);	
-	}	
-	
-	
 	/*戻り値は書き込んだ文字数にすること*/
 	return count;
 }
@@ -320,27 +195,7 @@ int gpioInit(void){
     return (gpio_map!=NULL) ? 0 : 1; 
 }
 
-/** 
- * GPIOポートをHighに
- * @param g ポート番号(GPIO*)
-*/
-int gpioSet(uint32_t g){
-    GPIOH = g;
-
-    return (GPIOH==g) ? 0 : 1;
-}
-
-/** 
- * GPIOポートをLowに
- * @param g ポート番号(GPIO*)
-*/
-int gpioClear(uint32_t g){
-    GPIOL = g;
-
-    return (GPIOL==g) ? 0 : 1;
-}
-
-int gpioExit(void){
+void gpioExit(void){
 
     
     printk(KERN_INFO "myGpio exit\n");
@@ -348,5 +203,87 @@ int gpioExit(void){
     // マッピングの解放
     iounmap(gpio_map);
 
-    return 0;
+    return;
+}
+
+/**
+ * @func 7セグの全消灯
+*/
+void segClear(void){
+	gpioSet(A_7SEG);	
+	gpioSet(B_7SEG);
+	gpioSet(C_7SEG);
+	gpioSet(D_7SEG);
+	gpioSet(E_7SEG);
+	gpioSet(F_7SEG);
+	gpioSet(G_7SEG);
+	gpioSet(D_P_7SEG);
+}
+
+/**
+ * @func LEDの全消灯
+*/
+void ledClear(void){
+	gpioClear(YELLOW);
+	gpioClear(GREEN);
+	gpioClear(RED);
+}
+
+void  def(char a, char b){
+
+	u_int32_t *base;
+	#define PBASE *base;
+
+	*base = (a == "H") ? GPIOH : GPIOL;	
+
+	switch(b){
+
+		// LED
+		case 'G':
+			PBASE = (1<<GREEN);
+			break;
+		
+		case 'Y':
+			PBASE = (1<<YELLOW);
+			break;
+
+		case 'R':
+			PBASE = (1<<RED);
+			break;
+
+		// 7セグ
+		case 'A':
+			PBASE = (1<<A_7SEG);
+			break;
+		
+		case 'B':
+			PBASE = (1<<B_7SEG);
+			break;
+
+		case 'C':
+			PBASE = (1<<C_7SEG);
+			break;
+
+		case 'D':
+			PBASE = (1<<D_7SEG);
+			break;
+
+		case 'E':
+			PBASE = (1<<E_7SEG);
+			break;
+
+		case 'F':
+			PBASE = (1<<F_7SEG);
+			break;
+
+		case 'H':
+			PBASE = (1<<G_7SEG);
+			break;
+
+		case 'I':
+			PBASE = (1<<D_P_7SEG);
+			break;
+		
+	}
+
 }
