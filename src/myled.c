@@ -150,8 +150,8 @@ static int myled_close(struct inode *inode, struct file *filp)
 static ssize_t myled_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos){
 	
 	char k_buf[256];
-	int node = 0;
-	char pattern[2][2][6] = {
+	int node = 0, i;
+	char pattern[2][6][2] = {
 		{
 			{'H', 'G'},
 			{'H', 'Y'},
@@ -164,11 +164,11 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 			{'H', 'Y'},
 			{'L', 'Y'},
 			{'H', 'R'},
-			{'L', 'R'}	
+			{'L', 'R'},	
 			{'H', 'G'},
-			{'L', 'G'},
+			{'L', 'G'}
 		}
-	}
+	};
 	
 	printk( KERN_INFO "myled: myled_write is called.\n" );
 
@@ -189,7 +189,7 @@ static ssize_t myled_write(struct file *filp, const char *buf, size_t count, lof
 		}
 
 		for(i=0; i<6; i++){
-			def(pattern[node][0][i], pattern[node][1][i]);
+			def(pattern[node][i][0], pattern[node][i][1]);
 		}
 
 	}else	
